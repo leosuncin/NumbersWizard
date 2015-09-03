@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
+using UnityEditor;
 using System.Collections;
+using System.Reflection; 
+using System;
 
 public class NumbersWizard : MonoBehaviour
 {
@@ -23,7 +26,8 @@ public class NumbersWizard : MonoBehaviour
 			max = center - 1;
 			Ask ();
 		} else if (Input.GetKeyDown (KeyCode.KeypadEnter) || Input.GetKeyDown (KeyCode.Return)) {
-			print ("Adivine, es " + center);
+			print ("Adivine, es " + center + "\nPresiona R para reiniciar");
+		} else if (Input.GetKeyDown (KeyCode.R)) {
 			min = 1;
 			max = 1000;
 			BeginGame ();
@@ -34,6 +38,7 @@ public class NumbersWizard : MonoBehaviour
 
 	private void BeginGame ()
 	{
+		ClearLog ();
 		print ("Bienvenido al Adivinador de numeros\nEscoge un  numero en tu cabeza, ¡pero no me lo digas!");
 		
 		print ("El numero maximo que puedes escoger es " + this.max + "\nEl numero mas bajo que puedes escoger es " + this.min);
@@ -45,5 +50,13 @@ public class NumbersWizard : MonoBehaviour
 	{
 		center = (max - min) / 2 + min;
 		print ("¿Es el numero mayor o menor que " + center + "?\nArriba: mayor que, abajo: menor que, Enter: igual");
+	}
+
+	private void ClearLog()
+	{
+		var assembly = Assembly.GetAssembly(typeof(UnityEditor.ActiveEditorTracker));
+		var type = assembly.GetType("UnityEditorInternal.LogEntries");
+		var method = type.GetMethod("Clear");
+		method.Invoke(new object(), null);
 	}
 }
